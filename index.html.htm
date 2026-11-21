@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tempo de Linha - Eixos</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --accent: #10b981;
+            --border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+
+        .card {
+            background-color: var(--card);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary-light);
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            text-align: center;
+            padding: 12px 4px;
+            background-color: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: all 0.2s;
+        }
+
+        .radio-option input:checked + label {
+            background-color: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: var(--bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-group span {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary-light);
+            cursor: pointer;
+        }
+
+        .results {
+            background-color: var(--text);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .result-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .result-box {
+            background-color: #1e293b;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .summary {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            border-top: 1px solid #334155;
+            padding-top: 10px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Linha de Eixos — Takt Time</h1>
+        <p>Turno base de 8h (480 min). Inclui desconto automático das duas pausas de 10 min (<strong>09:15</strong> e <strong>15:05</strong>).</p>
+    </header>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="carros">Produção Diária (Nº de Carros)</label>
+            <input type="number" id="carros" placeholder="Ex: 220" inputmode="numeric" min="1" oninput="calcular()">
+        </div>
+
+        <div class="form-group">
+            <label>Reunião da Manhã</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="reuniao" id="r0" value="0" checked onchange="calcular()">
+                    <label for="r0">0m</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="reuniao" id="r5" value="5" onchange="calcular()">
+                    <label for="r5">5m</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="reuniao" id="r10" value="10" onchange="calcular()">
+                    <label for="r10">10m</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="reuniao" id="r15" value="15" onchange="calcular()">
+                    <label for="r15">15m</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="reuniao" id="r20" value="20" onchange="calcular()">
+                    <label for="r20">20m</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="toggle-group" for="pararCedo">
+                <span>Parar 5 minutos mais cedo</span>
+                <input type="checkbox" id="pararCedo" onchange="calcular()">
+            </label>
+        </div>
+    </div>
+
+    <div class="results">
+        <div class="results-title">Tempo Disponível por Eixo</div>
+        <div class="result-boxes">
+            <div class="result-box">
+                <div class="result-value" id="res-mmss">--:--</div>
+                <div class="result-label">Minutos : Segundos</div>
+            </div>
+            <div class="result-box">
+                <div class="result-value" id="res-sss">---</div>
+                <div class="result-label">Total em Segundos</div>
+            </div>
+        </div>
+        <div class="summary" id="resumo">
+            Introduza o número de carros para calcular.
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcular() {
+        const carros = parseInt(document.getElementById('carros').value);
+        const reuniao = parseInt(document.querySelector('input[name="reuniao"]:checked').value);
+        const pararCedo = document.getElementById('pararCedo').checked ? 5 : 0;
+
+        const elMmss = document.getElementById('res-mmss');
+        const elSss = document.getElementById('res-sss');
+        const elResumo = document.getElementById('resumo');
+
+        if (!carros || carros <= 0) {
+            elMmss.textContent = "--:--";
+            elSss.textContent = "---";
+            elResumo.textContent = "Introduza o número de carros para calcular.";
+            return;
+        }
+
+        const turnoBaseMin = 480; // 8 horas
+        const pausasFixasMin = 20; // 2 pausas de 10m (09:15 e 15:05)
+        const tempoUtilMin = turnoBaseMin - pausasFixasMin - reuniao - pararCedo;
+        const tempoUtilSeg = tempoUtilMin * 60;
+
+        const totalEixos = carros * 2;
+        const segPorEixo = tempoUtilSeg / totalEixos;
+
+        // Formatar mm:ss (igual ao Excel, cortando as décimas)
+        const mins = Math.floor(segPorEixo / 60);
+        const secs = Math.floor(segPorEixo % 60);
+        const minsFormatado = String(mins).padStart(2, '0');
+        const secsFormatado = String(secs).padStart(2, '0');
+
+        // Formatar sss (também sem arredondar para cima)
+        const sssFormatado = Math.floor(segPorEixo) + "s";
+
+        elMmss.textContent = `${minsFormatado}:${secsFormatado}`;
+        elSss.textContent = sssFormatado;
+        elResumo.innerHTML = `Total: <strong>${totalEixos} eixos</strong> | Tempo útil: <strong>${tempoUtilMin} min</strong>`;
+    }
+</script>
+
+</body>
+</html>
